@@ -26,3 +26,11 @@ Celem projektu jest stworzenie aplikacji w języku Python do analizy danych doty
 ## Uruchomienie projektu
 
 Instrukcja zostanie uzupełniona w trakcie realizacji projektu.
+
+## Struktura projektu / TO DO
+
+- zaktualizowano 08.06.2026 (12:20)
+- uzgodnić strukturę projektu. Czy (`real_estate_analysis.py`, `data_loader.py`, `charts.py`) mają pozostać?
+- Utworzono foldery techniczne. Należy rozważyć, czy je pozostawić (icons/, screenshots/, raw/, processed/)
+- > **Status projektu:** Utworzono kompletną strukturę katalogów i pliki bazowe, które stanowią szkielet aplikacji. 
+  > Poszczególne moduły są obecnie puste i będą sukcesywnie uzupełniane kodem w kolejnych etapach wdrożenia.
