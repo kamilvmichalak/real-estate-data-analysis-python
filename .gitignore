@@ -1,23 +1,22 @@
-# Python
+# Python bytecode
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
+
+# Environments
 .env
-.env*
+.venv
 env/
 venv/
-.Python
+ENV/
 
-# IDE
-.vscode/
+# Data and logs
+src/data/raw/*.csv
+src/data/processed/*.csv
+logs/*.log
+
+# IDEs and OS files
 .idea/
-
-# Distribution
-build/
-dist/
-*.egg-info/
-
-# Data
-*.sqlite
-*.db
+.vscode/
+.DS_Store
+Thumbs.db
