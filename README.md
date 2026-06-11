@@ -29,8 +29,14 @@ Instrukcja zostanie uzupełniona w trakcie realizacji projektu.
 
 ## Struktura projektu / TO DO
 
-- zaktualizowano 08.06.2026 (12:20)
-- uzgodnić strukturę projektu. Czy (`real_estate_analysis.py`, `data_loader.py`, `charts.py`) mają pozostać?
-- Utworzono foldery techniczne. Należy rozważyć, czy je pozostawić (icons/, screenshots/, raw/, processed/)
+- zaktualizowano 08.06.2026 (12:20) [done]
+- uzgodnić strukturę projektu. Czy (`real_estate_analysis.py`, `data_loader.py`, `charts.py`) mają pozostać? [done]
+- Utworzono foldery techniczne. Należy rozważyć, czy je pozostawić (icons/, screenshots/, raw/, processed/) [done]
 - > **Status projektu:** Utworzono kompletną strukturę katalogów i pliki bazowe, które stanowią szkielet aplikacji. 
-  > Poszczególne moduły są obecnie puste i będą sukcesywnie uzupełniane kodem w kolejnych etapach wdrożenia.
+  > Poszczególne moduły są obecnie puste i będą sukcesywnie uzupełniane kodem w kolejnych etapach wdrożenia. [done]
+
+
+## Wdrażanie kodu i korekta błędów
+
+- usunięto pliki uznając je za nie potrzebne  (`real_estate_analysis.py`, `data_loader.py`, `charts.py`),
+- 
