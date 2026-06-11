@@ -45,3 +45,7 @@ Instrukcja zostanie uzupełniona w trakcie realizacji projektu.
 - ustalono wstępne .gitignore
 - uzupełniono plik main.py z nastawieniem na jego możliwe przyszłe zmiany
 - wdrożono moduł DATA LAYER zawierający cache.py, cleaner.py oraz fetcher.py
+
+## Wdrażanie warstwy analitycznej ANALYSIS LAYER
+
+- wdrożono moduł zawierający price_analysis.py, location_analysis.py, trend_analysis.py, correlation.py
