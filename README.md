@@ -39,4 +39,9 @@ Instrukcja zostanie uzupełniona w trakcie realizacji projektu.
 ## Wdrażanie kodu i korekta błędów
 
 - usunięto pliki uznając je za nie potrzebne  (`real_estate_analysis.py`, `data_loader.py`, `charts.py`),
-- 
+
+## Wdrażanie warstwy danych DATA LAYER
+
+- ustalono wstępne .gitignore
+- uzupełniono plik main.py z nastawieniem na jego możliwe przyszłe zmiany
+- wdrożono moduł DATA LAYER zawierający cache.py, cleaner.py oraz fetcher.py
