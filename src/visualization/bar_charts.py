@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def average_price_by_city_chart(df: pd.DataFrame) -> Figure:
     """
-    Generuje wykres słupkowy przedstawiający średnią cenę nieruchomości w miastach.
+    Generuje wykres słupkowy przedstawiający średnią cenę nieruchomości w lokalizacjach.
     """
     fig = Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
@@ -22,16 +22,15 @@ def average_price_by_city_chart(df: pd.DataFrame) -> Figure:
         return fig
 
     try:
-        data = df.groupby("city")["price"].mean().sort_values(ascending=False) / 1000  # w tysiącach
+        data = df.groupby("city")["price"].mean().sort_values(ascending=False) / 1000
         bars = ax.bar(data.index, data.values, color="#1f77b4", edgecolor="black", alpha=0.8)
 
-        ax.set_title("Średnia cena nieruchomości za miasto", fontsize=11, fontweight="bold", pad=10)
-        ax.set_xlabel("Miasto", fontsize=9)
-        ax.set_ylabel("Średnia cena (tys. PLN)", fontsize=9)
+        ax.set_title("Średnia cena nieruchomości według lokalizacji", fontsize=11, fontweight="bold", pad=10)
+        ax.set_xlabel("Lokalizacja", fontsize=9)
+        ax.set_ylabel("Średnia cena (tys. USD)", fontsize=9)
         ax.grid(axis='y', linestyle='--', alpha=0.7)
         ax.tick_params(axis='x', rotation=15, labelsize=9)
 
-        # Dodanie etykiet wartości nad słupkami
         for bar in bars:
             yval = bar.get_height()
             ax.text(bar.get_x() + bar.get_width() / 2.0, yval + (max(data.values) * 0.01), f"{int(yval)}k", ha='center',
@@ -47,7 +46,7 @@ def average_price_by_city_chart(df: pd.DataFrame) -> Figure:
 
 def offers_per_type_chart(df: pd.DataFrame) -> Figure:
     """
-    Generuje poziomy lub pionowy wykres słupkowy liczby ofert ze względu na typ nieruchomości.
+    Generuje poziomy wykres słupkowy liczby ofert ze względu na typ nieruchomości.
     """
     fig = Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
