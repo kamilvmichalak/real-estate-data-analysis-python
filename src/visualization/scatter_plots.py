@@ -24,12 +24,10 @@ def area_vs_price_chart(df: pd.DataFrame) -> Figure:
 
     try:
         x = df["area"].values
-        y = df["price"].values / 1000000  # w milionach PLN
+        y = df["price"].values / 1000000
 
-        # Wykres punktowy (Scatter Plot)
         ax.scatter(x, y, alpha=0.6, color="#9467bd", edgecolor="none", label="Oferty")
 
-        # Wyznaczenie linii regresji przez numpy.polyfit
         if len(x) > 1:
             m, b = np.polyfit(x, y, 1)
             x_line = np.linspace(min(x), max(x), 100)
@@ -38,7 +36,7 @@ def area_vs_price_chart(df: pd.DataFrame) -> Figure:
 
         ax.set_title("Zależność ceny od powierzchni nieruchomości", fontsize=11, fontweight="bold", pad=10)
         ax.set_xlabel("Powierzchnia (m²)", fontsize=9)
-        ax.set_ylabel("Cena (mln PLN)", fontsize=9)
+        ax.set_ylabel("Cena (mln USD)", fontsize=9)
         ax.grid(True, linestyle='--', alpha=0.5)
         ax.legend(fontsize=8)
 
