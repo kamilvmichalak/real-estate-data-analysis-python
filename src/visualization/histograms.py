@@ -22,20 +22,22 @@ def price_distribution_histogram(df: pd.DataFrame) -> Figure:
         return fig
 
     try:
-        prices_k = df["price"] / 1000  # w tysiącach
+        prices_k = pd.to_numeric(df["price"], errors="coerce").dropna() / 1000
+        if prices_k.empty:
+            ax.text(0.5, 0.5, "Brak poprawnych danych cenowych", ha='center', va='center')
+            return fig
 
-        # Obliczenie optymalnej liczby koszyków metodą Freedmana-Diaconisa lub stałą
         bins = min(30, max(10, len(prices_k) // 10))
 
         ax.hist(prices_k, bins=bins, color="#17becf", edgecolor="black", alpha=0.7, density=False)
         ax.set_title("Rozkład cen nieruchomości na rynku", fontsize=11, fontweight="bold", pad=10)
-        ax.set_xlabel("Cena (tys. PLN)", fontsize=9)
+        ax.set_xlabel("Cena (tys. USD)", fontsize=9)
         ax.set_ylabel("Częstość (liczba ofert)", fontsize=9)
         ax.grid(True, linestyle='--', alpha=0.5)
 
         fig.tight_layout()
     except Exception as e:
-        logger.error(f"Błąd generowania wykresu price_distribution_histogram: {e}")
+        logger.error(f"Błąd generowania wykresu price_distribution_histogram: {e}", exc_info=True)
         ax.text(0.5, 0.5, "Błąd generowania wykresu", ha='center', va='center')
 
     return fig
@@ -43,7 +45,7 @@ def price_distribution_histogram(df: pd.DataFrame) -> Figure:
 
 def price_boxplot(df: pd.DataFrame) -> Figure:
     """
-    Generuje wykres pudełkowy cen nieruchomości w podziale na główne miasta rynkowe.
+    Generuje wykres pudełkowy cen nieruchomości w podziale na główne lokalizacje.
     """
     fig = Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
@@ -53,33 +55,49 @@ def price_boxplot(df: pd.DataFrame) -> Figure:
         return fig
 
     try:
-        # Wybór maksymalnie 5 najpopularniejszych miast do czytelnego wykresu boxplot
-        top_cities = df["city"].value_counts().head(5).index.tolist()
+        working_df = df[["city", "price"]].copy()
+        working_df["price"] = pd.to_numeric(working_df["price"], errors="coerce")
+        working_df = working_df.dropna(subset=["city", "price"])
+
+        if working_df.empty:
+            ax.text(0.5, 0.5, "Brak poprawnych danych cenowych", ha='center', va='center')
+            return fig
+
+        top_locations = working_df["city"].value_counts().head(5).index.tolist()
 
         plot_data = []
         labels = []
-        for city in top_cities:
-            city_prices = (df[df["city"] == city]["price"] / 1000).values
-            plot_data.append(city_prices)
-            labels.append(city)
+        for location in top_locations:
+            location_prices = (working_df.loc[working_df["city"] == location, "price"] / 1000).to_numpy(dtype=float)
+            location_prices = location_prices[np.isfinite(location_prices)]
+
+            if len(location_prices) > 0:
+                plot_data.append(location_prices)
+                labels.append(str(location))
 
         if not plot_data:
-            ax.text(0.5, 0.5, "Brak danych dla głównych miast", ha='center', va='center')
+            ax.text(0.5, 0.5, "Brak danych dla głównych lokalizacji", ha='center', va='center')
             return fig
 
-        ax.boxplot(plot_data, labels=labels, patch_artist=True,
-                   boxprops=dict(facecolor="#ff7f0e", color="black", alpha=0.7),
-                   medianprops=dict(color="red", linewidth=1.5))
+        ax.boxplot(
+            plot_data,
+            patch_artist=True,
+            boxprops=dict(facecolor="#ff7f0e", color="black", alpha=0.7),
+            medianprops=dict(color="red", linewidth=1.5),
+            flierprops=dict(marker="o", markerfacecolor="gray", markersize=4, alpha=0.5)
+        )
+        ax.set_xticks(range(1, len(labels) + 1))
+        ax.set_xticklabels(labels)
 
-        ax.set_title("Wykres pudełkowy cen (Wychwytywanie outlierów)", fontsize=11, fontweight="bold", pad=10)
-        ax.set_ylabel("Cena (tys. PLN)", fontsize=9)
-        ax.set_xlabel("Miasto", fontsize=9)
-        ax.grid(True, linestyle='--', alpha=0.5)
+        ax.set_title("Rozkład cen w najczęstszych lokalizacjach", fontsize=11, fontweight="bold", pad=10)
+        ax.set_ylabel("Cena (tys. USD)", fontsize=9)
+        ax.set_xlabel("Lokalizacja", fontsize=9)
+        ax.grid(True, axis='y', linestyle='--', alpha=0.5)
         ax.tick_params(axis='x', rotation=15, labelsize=9)
 
         fig.tight_layout()
     except Exception as e:
-        logger.error(f"Błąd generowania wykresu price_boxplot: {e}")
+        logger.error(f"Błąd generowania wykresu price_boxplot: {e}", exc_info=True)
         ax.text(0.5, 0.5, "Błąd generowania wykresu", ha='center', va='center')
 
     return fig

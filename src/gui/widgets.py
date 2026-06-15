@@ -22,20 +22,39 @@ class StatusBar(tk.Frame):
 
 
 class FilterFrame(tk.LabelFrame):
-    """Panel filtrujący umożliwiający szybką selekcję miast."""
+    """Panel filtrujący umożliwiający szybką selekcję lokalizacji."""
 
     def __init__(self, parent: tk.Misc, on_change_callback: Callable[[str], None], **kwargs) -> None:
         super().__init__(parent, text=" Szybkie Filtrowanie Danych ", **kwargs)
 
-        tk.Label(self, text="Wybierz miasto:").pack(side=tk.LEFT, padx=5, pady=5)
+        self.on_change_callback = on_change_callback
 
-        self.combo = ttk.Combobox(self,
-                                  values=["Wszystkie", "Warszawa", "Kraków", "Wrocław", "Poznań", "Gdańsk", "Łódź"],
-                                  state="readonly")
+        tk.Label(self, text="Wybierz lokalizację:").pack(side=tk.LEFT, padx=5, pady=5)
+
+        self.combo = ttk.Combobox(
+            self,
+            values=["Wszystkie"],
+            state="readonly",
+            width=25
+        )
         self.combo.set("Wszystkie")
         self.combo.pack(side=tk.LEFT, padx=5, pady=5)
 
-        self.combo.bind("<<ComboboxSelected>>", lambda e: on_change_callback(self.combo.get()))
+        self.combo.bind("<<ComboboxSelected>>", lambda e: self.on_change_callback(self.combo.get()))
+
+    def set_options(self, values: list[str]) -> None:
+        """Aktualizuje listę dostępnych lokalizacji na podstawie załadowanych danych."""
+        cleaned_values = sorted(
+            {
+                str(value).strip()
+                for value in values
+                if str(value).strip() and str(value).strip().lower() != "nan"
+            }
+        )
+        options = ["Wszystkie"] + cleaned_values
+
+        self.combo.config(values=options)
+        self.combo.set("Wszystkie")
 
 
 class LoadingOverlay:
