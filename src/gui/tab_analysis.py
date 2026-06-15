@@ -39,7 +39,7 @@ class AnalysisTab(tk.Frame):
 
         param_frame = tk.Frame(left_panel)
         param_frame.pack(fill=tk.X, pady=15)
-        tk.Label(param_frame, text="Limit rekordów lokalizacji:").pack(side=tk.LEFT)
+        tk.Label(param_frame, text="Limit lokalizacji w raporcie:").pack(side=tk.LEFT)
         self.entry_limit = tk.Entry(param_frame, width=5)
         self.entry_limit.insert(0, "5")
         self.entry_limit.pack(side=tk.LEFT, padx=5)
@@ -60,6 +60,22 @@ class AnalysisTab(tk.Frame):
         """Przekazuje aktualną bazę danych do obszaru analiz."""
         self.df = df
 
+    def _get_location_limit(self) -> int:
+        """Pobiera limit lokalizacji z pola tekstowego i zabezpiecza go przed błędnymi wartościami."""
+        try:
+            limit = int(self.entry_limit.get())
+        except ValueError:
+            limit = 5
+
+        return max(limit, 1)
+
+    @staticmethod
+    def _limit_series(series: pd.Series, limit: int) -> pd.Series:
+        """Ogranicza liczbę wierszy w seriach raportujących wyniki według lokalizacji."""
+        if series.empty:
+            return series
+        return series.head(limit)
+
     def run_analysis(self) -> None:
         """Zbiera zaznaczone analizy statystyczne i składa je w czytelny raport tekstowy."""
         if self.df.empty:
@@ -68,24 +84,26 @@ class AnalysisTab(tk.Frame):
                                    "BŁĄD: Brak załadowanych danych w pamięci aplikacji! Pobierz dane w pierwszej zakładce.")
             return
 
-        try:
-            limit = int(self.entry_limit.get())
-        except ValueError:
-            limit = 5
+        limit = self._get_location_limit()
 
         report = []
         report.append("======================================================================")
         report.append("          RAPORT ANALITYCZNY RYNKU NIERUCHOMOŚCI USA - PYTHON 3.12+   ")
         report.append("======================================================================\n")
+        report.append(f"Limit lokalizacji w raporcie: {limit}\n")
 
         if self.check_price.get():
+            average_price = self._limit_series(PriceAnalysis.average_price_by_city(self.df), limit)
+            median_price = self._limit_series(PriceAnalysis.median_price_by_city(self.df), limit)
+            average_price_per_m2 = self._limit_series(PriceAnalysis.average_price_per_square_meter(self.df), limit)
+
             report.append("--- 1. STATYSTYKI CENOWE ---")
-            report.append("Średnia cena według lokalizacji:")
-            report.append(PriceAnalysis.average_price_by_city(self.df).to_string())
-            report.append("\nMediana ceny według lokalizacji:")
-            report.append(PriceAnalysis.median_price_by_city(self.df).to_string())
-            report.append("\nŚrednia cena za metr kwadratowy według lokalizacji:")
-            report.append(PriceAnalysis.average_price_per_square_meter(self.df).to_string())
+            report.append(f"Średnia cena według lokalizacji (Top {limit}):")
+            report.append(average_price.to_string())
+            report.append(f"\nMediana ceny według lokalizacji (Top {limit}):")
+            report.append(median_price.to_string())
+            report.append(f"\nŚrednia cena za metr kwadratowy według lokalizacji (Top {limit}):")
+            report.append(average_price_per_m2.to_string())
             report.append("\nŚrednia cena według typu nieruchomości:")
             report.append(PriceAnalysis.average_price_by_property_type(self.df).to_string())
             report.append("-" * 50 + "\n")
