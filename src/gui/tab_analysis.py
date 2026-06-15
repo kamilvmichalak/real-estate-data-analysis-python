@@ -20,7 +20,6 @@ class AnalysisTab(tk.Frame):
         self._build_ui()
 
     def _build_ui(self) -> None:
-        # Lewy panel wyboru rodzaju analizy
         left_panel = tk.LabelFrame(self, text=" Wybór zakresu analiz rynkowych ", width=250, padx=10, pady=10)
         left_panel.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
 
@@ -38,7 +37,6 @@ class AnalysisTab(tk.Frame):
         tk.Checkbutton(left_panel, text="Obliczanie macierzy korelacji", variable=self.check_corr).pack(anchor=tk.W,
                                                                                                         pady=5)
 
-        # Panel parametrów krańcowych
         param_frame = tk.Frame(left_panel)
         param_frame.pack(fill=tk.X, pady=15)
         tk.Label(param_frame, text="Limit rekordów lokalizacji:").pack(side=tk.LEFT)
@@ -50,7 +48,6 @@ class AnalysisTab(tk.Frame):
                                   font=("Arial", 10, "bold"), command=self.run_analysis)
         self.btn_calc.pack(fill=tk.X, side=tk.BOTTOM, pady=10)
 
-        # Prawy panel tekstowy prezentacji raportu końcowego
         right_panel = tk.LabelFrame(self, text=" Wygenerowany Raport Analityczny (Zgodnie z SOLID) ")
         right_panel.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -78,26 +75,26 @@ class AnalysisTab(tk.Frame):
 
         report = []
         report.append("======================================================================")
-        report.append("          RAPORT ANALITYCZNY RYNKU NIERUCHOMOŚCI - PYTHON 3.12+       ")
+        report.append("          RAPORT ANALITYCZNY RYNKU NIERUCHOMOŚCI USA - PYTHON 3.12+   ")
         report.append("======================================================================\n")
 
         if self.check_price.get():
             report.append("--- 1. STATYSTYKI CENOWE ---")
-            report.append("Średnia cena w miastach:")
+            report.append("Średnia cena według lokalizacji:")
             report.append(PriceAnalysis.average_price_by_city(self.df).to_string())
-            report.append("\nMediana ceny w miastach:")
+            report.append("\nMediana ceny według lokalizacji:")
             report.append(PriceAnalysis.median_price_by_city(self.df).to_string())
-            report.append("\nŚrednia cena za metr kwadratowy w miastach:")
+            report.append("\nŚrednia cena za metr kwadratowy według lokalizacji:")
             report.append(PriceAnalysis.average_price_per_square_meter(self.df).to_string())
             report.append("\nŚrednia cena według typu nieruchomości:")
             report.append(PriceAnalysis.average_price_by_property_type(self.df).to_string())
             report.append("-" * 50 + "\n")
 
         if self.check_location.get():
-            report.append("--- 2. ANALIZA LOKALIZACYJNA (TOP OBRĘBY) ---")
-            report.append(f"Najtańsze lokalizacje (Top {limit} dzielnic wg ceny PLN/m²):")
+            report.append("--- 2. ANALIZA LOKALIZACYJNA (TOP LOKALIZACJE) ---")
+            report.append(f"Najtańsze lokalizacje (Top {limit} lokalizacji wg ceny USD/m²):")
             report.append(LocationAnalysis.cheapest_locations(self.df, limit).to_string(index=False))
-            report.append(f"\nNajdroższe lokalizacje (Top {limit} dzielnic wg ceny PLN/m²):")
+            report.append(f"\nNajdroższe lokalizacje (Top {limit} lokalizacji wg ceny USD/m²):")
             report.append(LocationAnalysis.most_expensive_locations(self.df, limit).to_string(index=False))
             report.append("-" * 50 + "\n")
 
