@@ -29,10 +29,20 @@ class ChartsTab(tk.Frame):
         self._build_ui()
 
     def _build_ui(self) -> None:
-        left_frame = tk.LabelFrame(self, text=" Lista dostępnych wizualizacji ", width=220, padx=5, pady=5)
+        left_frame = tk.LabelFrame(self, text=" Lista dostępnych wizualizacji ", width=310, padx=5, pady=5)
         left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
+        left_frame.pack_propagate(False)
 
-        self.chart_listbox = tk.Listbox(left_frame, selectmode=tk.SINGLE, font=("Arial", 9))
+        list_frame = tk.Frame(left_frame)
+        list_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+
+        self.chart_listbox = tk.Listbox(
+            list_frame,
+            selectmode=tk.SINGLE,
+            font=("Arial", 9),
+            width=42,
+            exportselection=False
+        )
         self.charts_map = {
             "Średnia cena według lokalizacji": average_price_by_city_chart,
             "Liczba ofert wg typu": offers_per_type_chart,
@@ -46,7 +56,19 @@ class ChartsTab(tk.Frame):
         for name in self.charts_map.keys():
             self.chart_listbox.insert(tk.END, name)
 
-        self.chart_listbox.pack(fill=tk.BOTH, expand=True, pady=5)
+        vertical_scrollbar = ttk.Scrollbar(list_frame, orient=tk.VERTICAL, command=self.chart_listbox.yview)
+        horizontal_scrollbar = ttk.Scrollbar(list_frame, orient=tk.HORIZONTAL, command=self.chart_listbox.xview)
+        self.chart_listbox.configure(
+            yscrollcommand=vertical_scrollbar.set,
+            xscrollcommand=horizontal_scrollbar.set
+        )
+
+        self.chart_listbox.grid(row=0, column=0, sticky="nsew")
+        vertical_scrollbar.grid(row=0, column=1, sticky="ns")
+        horizontal_scrollbar.grid(row=1, column=0, sticky="ew")
+        list_frame.grid_rowconfigure(0, weight=1)
+        list_frame.grid_columnconfigure(0, weight=1)
+
         self.chart_listbox.bind("<<ListboxSelect>>", lambda e: self.render_selected_chart())
 
         self.btn_save_png = tk.Button(left_frame, text="Zapisz wykres jako PNG", bg="#009688", fg="white",
