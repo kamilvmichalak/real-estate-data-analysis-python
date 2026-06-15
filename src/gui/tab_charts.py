@@ -11,11 +11,11 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 
 # Importy silników renderujących wykresy
-from visualization.bar_charts import average_price_by_city_chart, offers_per_type_chart
-from visualization.scatter_plots import area_vs_price_chart
-from visualization.heatmap import correlation_heatmap
-from visualization.histograms import price_distribution_histogram, price_boxplot
-from visualization.line_charts import offers_trend_chart
+from src.visualization.bar_charts import average_price_by_city_chart, offers_per_type_chart
+from src.visualization.scatter_plots import area_vs_price_chart
+from src.visualization.heatmap import correlation_heatmap
+from src.visualization.histograms import price_distribution_histogram, price_boxplot
+from src.visualization.line_charts import offers_trend_chart
 
 
 class ChartsTab(tk.Frame):

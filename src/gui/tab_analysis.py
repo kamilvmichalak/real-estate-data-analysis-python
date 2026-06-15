@@ -5,10 +5,10 @@ Implementacja zakładki generującej tekstowe zestawienia statystyczne rynku nie
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 import pandas as pd
-from analysis.price_analysis import PriceAnalysis
-from analysis.location_analysis import LocationAnalysis
-from analysis.trend_analysis import TrendAnalysis
-from analysis.correlation import CorrelationAnalysis
+from src.analysis.price_analysis import PriceAnalysis
+from src.analysis.location_analysis import LocationAnalysis
+from src.analysis.trend_analysis import TrendAnalysis
+from src.analysis.correlation import CorrelationAnalysis
 
 
 class AnalysisTab(tk.Frame):

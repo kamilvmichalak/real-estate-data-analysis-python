@@ -9,9 +9,9 @@ import threading
 import logging
 import pandas as pd
 
-from data.fetcher import RealEstateFetcher
-from data.cleaner import DataCleaner
-from data.cache import DataCache
+from src.data.fetcher import RealEstateFetcher
+from src.data.cleaner import DataCleaner
+from src.data.cache import DataCache
 
 from .tab_data import DataTab
 from .tab_analysis import AnalysisTab
