@@ -22,14 +22,12 @@ def price_distribution_histogram(df: pd.DataFrame) -> Figure:
         return fig
 
     try:
-        prices_k = df["price"] / 1000  # w tysiącach
-
-        # Obliczenie optymalnej liczby koszyków metodą Freedmana-Diaconisa lub stałą
+        prices_k = df["price"] / 1000
         bins = min(30, max(10, len(prices_k) // 10))
 
         ax.hist(prices_k, bins=bins, color="#17becf", edgecolor="black", alpha=0.7, density=False)
         ax.set_title("Rozkład cen nieruchomości na rynku", fontsize=11, fontweight="bold", pad=10)
-        ax.set_xlabel("Cena (tys. PLN)", fontsize=9)
+        ax.set_xlabel("Cena (tys. USD)", fontsize=9)
         ax.set_ylabel("Częstość (liczba ofert)", fontsize=9)
         ax.grid(True, linestyle='--', alpha=0.5)
 
@@ -43,7 +41,7 @@ def price_distribution_histogram(df: pd.DataFrame) -> Figure:
 
 def price_boxplot(df: pd.DataFrame) -> Figure:
     """
-    Generuje wykres pudełkowy cen nieruchomości w podziale na główne miasta rynkowe.
+    Generuje wykres pudełkowy cen nieruchomości w podziale na główne lokalizacje.
     """
     fig = Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
@@ -53,7 +51,6 @@ def price_boxplot(df: pd.DataFrame) -> Figure:
         return fig
 
     try:
-        # Wybór maksymalnie 5 najpopularniejszych miast do czytelnego wykresu boxplot
         top_cities = df["city"].value_counts().head(5).index.tolist()
 
         plot_data = []
@@ -64,7 +61,7 @@ def price_boxplot(df: pd.DataFrame) -> Figure:
             labels.append(city)
 
         if not plot_data:
-            ax.text(0.5, 0.5, "Brak danych dla głównych miast", ha='center', va='center')
+            ax.text(0.5, 0.5, "Brak danych dla głównych lokalizacji", ha='center', va='center')
             return fig
 
         ax.boxplot(plot_data, labels=labels, patch_artist=True,
@@ -72,8 +69,8 @@ def price_boxplot(df: pd.DataFrame) -> Figure:
                    medianprops=dict(color="red", linewidth=1.5))
 
         ax.set_title("Wykres pudełkowy cen (Wychwytywanie outlierów)", fontsize=11, fontweight="bold", pad=10)
-        ax.set_ylabel("Cena (tys. PLN)", fontsize=9)
-        ax.set_xlabel("Miasto", fontsize=9)
+        ax.set_ylabel("Cena (tys. USD)", fontsize=9)
+        ax.set_xlabel("Lokalizacja", fontsize=9)
         ax.grid(True, linestyle='--', alpha=0.5)
         ax.tick_params(axis='x', rotation=15, labelsize=9)
 
