@@ -200,3 +200,4 @@ Ceny są wyrażone w USD, a powierzchnia została przeliczona ze stóp kwadratow
 ## Autor
 
 Kamil Michalak
+Oskar Wojtkowiak
